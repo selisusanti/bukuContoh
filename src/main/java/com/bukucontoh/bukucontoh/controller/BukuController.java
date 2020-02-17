@@ -77,6 +77,23 @@ public class BukuController{
 
     }
 
+    @PutMapping("/buku/{id}")
+    public ResponseEntity<BukuContoh> updateBukuContoh(@PathVariable("id") long id, @RequestBody BukuContoh bukucontoh){
+        Optional<BukuContoh> bukucontohData = bukuRepository.findById(id);
+
+        if(bukucontohData.isPresent()){
+            BukuContoh _bukucontoh = bukucontohData.get();
+            _bukucontoh.setNama(bukucontoh.getNama());
+            _bukucontoh.setDescription(bukucontoh.getDescription());
+            _bukucontoh.setIdrak(bukucontoh.getIdrak());
+            
+            return new ResponseEntity<>(bukuRepository.save(_bukucontoh), HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+    }
+
     @DeleteMapping("/buku/{id}")
 	public ResponseEntity<HttpStatus> deleteBukuContoh(@PathVariable("id") long id) {
 		try {
@@ -85,7 +102,36 @@ public class BukuController{
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 		}
-	}
+    }
+    
+    @DeleteMapping("/buku")
+	public ResponseEntity<HttpStatus> deleteAllBuku() {
+		try {
+			bukuRepository.deleteAll();
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+		}
+
+    }
+    
+    // @GetMapping("/buku/nama")
+    // public ResponseEntity<List<BukuContoh>> findByNama(){
+    //     try{
+    //         List<BukuContoh> bukucontohs = bukuRepository.findByNama(true);
+
+    //         if (bukucontohs.isEmpty()) {
+	// 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	// 		}
+	// 		return new ResponseEntity<>(bukucontohs, HttpStatus.OK);
+
+    //     }catch(Exception e){
+	// 		return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+
+    //     }
+
+    // }
+    
     
     
 
